@@ -19,13 +19,13 @@ object Baum {
 }
 
 // my implementation of Functor, replace this with cats!
-//trait Functor[F[_]] {
+//trait MyFunctor[F[_]] {
 //
 //  def map[A, B](fa: F[A])(f: A => B): F[B]
 //
 //}
 
-//object Functor {
+//object MyFunctor {
 //
 //  implicit val optionFunctor: Functor[Option] = new Functor[Option] {
 //    def map[A, B](fa: Option[A])(f: A => B): Option[B] = fa.map(f)
