@@ -1,4 +1,4 @@
-package sandbox.dsl.untyped
+package sandbox.dsl.basic2.untyped
 
 import cats.Applicative
 import cats.syntax.applicative._
@@ -8,11 +8,12 @@ import cats.syntax.apply._
  * Woot! The monad isn't necessary!
  */
 
-class GenericApplicativeInterpreter[F[_]: Applicative]() {
+class GenericInterpreter[F[_]: Applicative]() {
 
   def eval(expr: Expr): F[Int] =
     expr match {
-      case Num(v)      => v.pure[F]
+      case Num(v)      =>
+        v.pure[F]
       case Add(e1, e2) =>
         (
           eval(e1),

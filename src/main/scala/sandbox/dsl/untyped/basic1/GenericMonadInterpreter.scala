@@ -1,4 +1,4 @@
-package sandbox.dsl.untyped
+package sandbox.dsl.basic1.untyped
 
 import cats.Monad
 import cats.syntax.applicative._
@@ -14,7 +14,8 @@ class GenericMonadInterpreter[F[_]: Monad]() {
 
   def eval(expr: Expr): F[Int] =
     expr match {
-      case Num(v)      => v.pure[F]
+      case Num(v)      =>
+        v.pure[F]
       case Add(e1, e2) =>
         for {
           r1 <- eval(e1)

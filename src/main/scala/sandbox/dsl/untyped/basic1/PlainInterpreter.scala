@@ -1,4 +1,4 @@
-package sandbox.dsl.untyped
+package sandbox.dsl.basic1.untyped
 
 object PlainInterpreter {
 
