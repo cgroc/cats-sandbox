@@ -4,7 +4,7 @@ object App {
 
   import cats.instances.either._
 
-  type CalcResult[Val] = Either[String, Val]
+  type CalcResult[A] = Either[String, A]
 
   def main(args: Array[String]): Unit = {
     val e1 = Add(Mul(Lit(NumVal(2)), Lit(NumVal(3))), Lit(NumVal(4)))
