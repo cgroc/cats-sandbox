@@ -7,6 +7,10 @@ import cats.syntax.flatMap._
 import cats.syntax.functor._
 
 // had to retreat from Applicative bcs there are 2 stages now!
+
+// other things to put in
+// scope?
+// conditionals
 class GenericInterpreter[F[_]](implicit monadError: MonadError[F, String]) {
 
   def eval(expr: Expr): F[Val] =
@@ -16,50 +20,43 @@ class GenericInterpreter[F[_]](implicit monadError: MonadError[F, String]) {
       case Add(e1, e2) =>
         for {
           v1 <- eval(e1)
+          n1 <- valToNumVal(v1)
           v2 <- eval(e2)
-          r  <- combineAdd(v1, v2)
-        } yield r
+          n2 <- valToNumVal(v2)
+        } yield NumVal(n1 + n2)
       case Mul(e1, e2) =>
         for {
           v1 <- eval(e1)
+          n1 <- valToNumVal(v1)
           v2 <- eval(e2)
-          r  <- combineMultiply(v1, v2)
-        } yield r
+          n2 <- valToNumVal(v2)
+        } yield NumVal(n1 * n2)
       case And(e1, e2) =>
         for {
           v1 <- eval(e1)
+          b1 <- valToBoolVal(v1)
           v2 <- eval(e2)
-          r  <- combineAnd(v1, v2)
-        } yield r
+          b2 <- valToBoolVal(v2)
+        } yield BoolVal(b1 && b2)
       case Gte(e1, e2) =>
         for {
           v1 <- eval(e1)
+          n1 <- valToNumVal(v1)
           v2 <- eval(e2)
-          r  <- combineGte(v1, v2)
-        } yield r
+          n2 <- valToNumVal(v2)
+        } yield BoolVal(n1 >= n2)
     }
 
-  def combineAdd(v1: Val, v2: Val): F[Val] =
-    (v1, v2) match {
-      case (NumVal(n1), NumVal(n2)) => (NumVal(n1 + n2): Val).pure[F] // bleugh
-      case _ => "Can't add that!".raiseError
+
+  def valToNumVal(v: Val): F[Int] =
+    v match {
+      case NumVal(n) => n.pure[F]
+      case _         => "Can't convert to Int".raiseError
     }
 
-  def combineMultiply(v1: Val, v2: Val): F[Val] =
-    (v1, v2) match {
-      case (NumVal(n1), NumVal(n2)) => (NumVal(n1 * n2): Val).pure[F] // bleugh
-      case _ => "Can't multiply that!".raiseError
-    }
-
-  def combineAnd(v1: Val, v2: Val): F[Val] =
-    (v1, v2) match {
-      case (BoolVal(b1), BoolVal(b2)) => (BoolVal(b1 && b2): Val).pure[F] // bleugh
-      case _ => "Can't and that!".raiseError
-    }
-
-  def combineGte(v1: Val, v2: Val): F[Val] =
-    (v1, v2) match {
-      case (NumVal(n1), NumVal(n2)) => (BoolVal(n1 >= n2): Val).pure[F] // bleugh
-      case _ => "Can't gte that!".raiseError
+  def valToBoolVal(v: Val): F[Boolean] =
+    v match {
+      case BoolVal(b) => b.pure[F]
+      case _         => "Can't convert to Boolean".raiseError
     }
 }
