@@ -1,19 +1,17 @@
-package sandbox.dsl.basic2.untyped
+package sandbox.dsl.untyped.basic2
 
 object App {
 
-  import cats.instances.option._
+  import cats.instances.either._
+
+  type CalcResult[Val] = Either[String, Val]
 
   def main(args: Array[String]): Unit = {
-    val expression = Add((Mul(Num(2), Num(3))), Num(4))
+    val expression = Add(Mul(Lit(NumVal(2)), Lit(NumVal(3))), Lit(NumVal(4)))
 
-    val result = PlainInterpreter.eval(expression)
+    val genericInterpreter = new GenericInterpreter[CalcResult]
 
-    println(result)
-
-    val applicativeOptionInterpreter = new GenericInterpreter[Option]
-
-    val otherOptionResult = applicativeOptionInterpreter.eval(expression)
+    val otherOptionResult = genericInterpreter.eval(expression)
 
     println(otherOptionResult)
   }
