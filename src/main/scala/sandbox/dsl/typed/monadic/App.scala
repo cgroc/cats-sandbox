@@ -22,6 +22,18 @@ object App {
     } yield result
 
     println(interpreter.eval(program))
+
+//  This needs the type annotations to compile, which is why the smart constructors are so useful ^^
+//
+    val anotherProgram: Expr[Int] = for {
+      a <- Pure(7) : Expr[Int]
+      b <- Pure(8) : Expr[Int]
+      c <- Pure (9) : Expr[Int]
+      d <- Add(a, b)
+      e <- Mul(c, d)
+    } yield e
+
+    println(interpreter.eval(anotherProgram))
  }
 
 }
