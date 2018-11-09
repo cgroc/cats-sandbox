@@ -9,28 +9,20 @@ class GenericInterpreter[F[_]](implicit monad: Monad[F]) {
 
   def eval[A](expr: Expr[A]): F[A] =
     expr match {
-      case Pure(a) => a.pure
+      case Pure(a)     => a.pure
       case Add(n1, n2) =>
-        for {
-          a <- eval(n1)
-          b <- eval(n2)
-        } yield a + b
+        (n1 + n2).pure
       case Mul(n1, n2) =>
-        for {
-          a <- eval(n1)
-          b <- eval(n2)
-        } yield a * b
+        (n1 * n2).pure
       case And(b1, b2) =>
-        for {
-          a <- eval(b1)
-          b <- eval(b2)
-        } yield a && b
+        (b1 && b2).pure
       case Gte(n1, n2) =>
-        for {
-          a <- eval(n1)
-          b <- eval(n2)
-        } yield a >= b
+        (n1 >= n2).pure
       case FlatMapExpr(expA, f) =>
-        eval(expA).flatMap(a => eval(f(a)))
+        for {
+          a <- eval(expA)
+          b <- eval(f(a))
+        } yield b
+
     }
 }
